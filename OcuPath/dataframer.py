@@ -1,8 +1,9 @@
 import os
 import re
-import math
 import numpy as np
 import pandas as pd
+
+from .params import *
 
 class DataFramer():
     def __init__(self) -> None:
@@ -16,9 +17,9 @@ class DataFramer():
         return homepath
 
     def read_data(self, drive=False, file='full_df.csv'):
-        path = self.set_data_path(drive)
-        data = pd.read_csv(os.path.join(path, file))
-        return data
+        self.path = self.set_data_path(drive)
+        self.data = pd.read_csv(os.path.join(self.path, file))
+        return self.data
 
     def get_key_list(self, frame, key_list=None):
         if key_list == None:
@@ -27,4 +28,14 @@ class DataFramer():
             keywords = re.findall(r'([\w\-\s]+)', eye)
             for word in keywords:
                 key_list.append(word.strip())
-        return list(set(key_list))
+        key_list = list(set(key_list))
+        key_list.sort()
+        return key_list
+
+    def extract_jpg_names(self):
+        left = self.data[['Left-Fundus']].values.squeeze()
+        right = self.data[['Right-Fundus']].values.squeeze()
+        return left, right
+
+    def test(self):
+        print(TARGET_LIST[3])

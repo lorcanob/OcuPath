@@ -42,9 +42,17 @@ class DataFramer():
             left_data = self.data[LEFT_INFO].rename(columns=LEFT_MAPPER)
             left_data[['Eye']] = 'Left'
 
-            human_df = pd.concat((right_data, left_data)).drop_duplicates().sort_index()
-            human_df.index.name = 'Patient ID'
-            return human_df
+            self.human_df = pd.concat((right_data, left_data)).drop_duplicates().sort_index()
+            self.human_df.index.name = 'Patient ID'
+            return self.human_df
+        return None
+
+    def get_model_df(self):
+        if self.human_df:
+            self.model_df = self.human_df.copy()
+            self.model_df['Patient Sex'] = self.model_df['Patient Sex'].map(SEX_MAPPER)
+            self.model_df['Eye'] = self.model_df['Eye'].map(EYE_MAPPER)
+            return self.model_df.rename(columns=MODEL_MAPPER)
         return None
 
     def get_key_list(self, frame, key_list=None):

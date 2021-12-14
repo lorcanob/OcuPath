@@ -23,6 +23,10 @@ class DataFramer():
             self.datapath = os.path.join('..', 'raw_data')
         return self.datapath
 
+    def set_image_path(self, dir='preprocessed_images'):
+        self.impath = os.path.join(self.datapath, dir)
+        return self.impath
+
     def read_data(self, drive=False, file='full_df.csv'):
         '''
         Reads the csv file into a Pandas DataFrame and stores it as an attribute

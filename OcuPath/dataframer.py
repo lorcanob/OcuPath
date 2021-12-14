@@ -62,6 +62,14 @@ class DataFramer():
             return self.model_df.rename(columns=MODEL_MAPPER)
         return None
 
+    def remove_missing(self):
+        '''
+        Removes instances of missing images for model_df
+        '''
+        true_images = os.listdir(self.impath)
+        self.model_df = self.model_df[self.model_df['Image'].isin(true_images)]
+        return self.model_df
+
     def get_key_list(self, series, key_list=None):
         '''
         Parses through the Diagnostic Keywords Series to create an exhaustive

@@ -7,7 +7,7 @@ from .params import *
 
 class DataFramer():
     def __init__(self) -> None:
-        pass
+        self.data = None
 
     def set_data_path(self, drive=False):
         if drive:
@@ -33,9 +33,11 @@ class DataFramer():
         return key_list
 
     def extract_jpg_names(self):
-        left = self.data[['Left-Fundus']].values.squeeze()
-        right = self.data[['Right-Fundus']].values.squeeze()
-        return left, right
+        if self.data:
+            left = self.data[['Left-Fundus']].values.squeeze()
+            right = self.data[['Right-Fundus']].values.squeeze()
+            return left, right
+        return None
 
     def test(self):
         print(TARGET_LIST[3])

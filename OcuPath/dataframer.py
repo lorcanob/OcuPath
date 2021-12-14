@@ -28,8 +28,24 @@ class DataFramer():
         Reads the csv file into a Pandas DataFrame and stores it as an attribute
         '''
         self.path = self.set_data_path(drive)
-        self.data = pd.read_csv(os.path.join(self.path, file))
+        self.data = pd.read_csv(os.path.join(self.path, file), index_col='ID')
         return self.data
+
+    def get_human_df(self):
+        '''
+        Returns human readable dataframe of each eye, ready to be made 'model ready'
+        '''
+        if self.data:
+            right_data = self.data[RIGHT_INFO].rename(columns=RIGHT_MAPPER)
+            right_data[['Eye']] = 'Right'
+
+            left_data = self.data[LEFT_INFO].rename(columns=LEFT_MAPPER)
+            left_data[['Eye']] = 'Left'
+
+            human_df = pd.concat((right_data, left_data)).drop_duplicates().sort_index()
+            human_df.index.name = 'Patient ID'
+            return human_df
+        return None
 
     def get_key_list(self, frame, key_list=None):
         '''
@@ -61,4 +77,4 @@ class DataFramer():
         '''
         Test function to ensure that the class has reloaded when running in Jupyter
         '''
-        print(TARGET_LIST[3])
+        print(TARGET_LIST[0])

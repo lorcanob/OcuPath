@@ -101,4 +101,4 @@ class DataFramer():
         '''
         Test function to ensure that the class has reloaded when running in Jupyter
         '''
-        print(TARGET_LIST[1])
+        print(TARGET_LIST[0])

@@ -18,7 +18,7 @@ class DataFramer():
         or via Google Drive
         '''
         if drive:
-            self.datapath = os.path.join('content', 'drive', 'MyDrive', 'Colab Notebooks', 'Ocular pathology', 'ODIR-5K')
+            self.datapath = os.path.join('content', 'drive', 'MyDrive', 'Colab Notebooks', 'Ocular pathology')
         else:
             self.datapath = os.path.join('..', 'raw_data')
         return self.datapath

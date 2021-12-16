@@ -1,6 +1,5 @@
 import os
 import re
-import numpy as np
 import pandas as pd
 
 from .params import *
@@ -10,11 +9,11 @@ class DataFramer():
     Class to transform and prepare the raw csv file into a format that is more useful
     '''
     def __init__(self) -> None:
-        self.datapath = None
-        self.impath = None
-        self.data = None
-        self.human_df = None
-        self.model_df = None
+        self.datapath = self.set_data_path()
+        self.impath = self.set_image_path()
+        self.data = self.read_data()
+        self.human_df = self.get_human_df()
+        self.model_df = self.get_model_df()
 
     def set_data_path(self, drive=False):
         '''
@@ -27,7 +26,8 @@ class DataFramer():
             self.datapath = os.path.join('..', 'raw_data')
         return self.datapath
 
-    def set_image_path(self, dir='preprocessed_images'):
+    def set_image_path(self, drive=False, dir='preprocessed_images'):
+        self.set_image_path(drive)
         self.impath = os.path.join(self.datapath, dir)
         return self.impath
 
@@ -65,7 +65,18 @@ class DataFramer():
         self.model_df = df.copy()
         self.model_df['Patient Sex'] = self.model_df['Patient Sex'].map(SEX_MAPPER)
         self.model_df['Eye'] = self.model_df['Eye'].map(EYE_MAPPER)
-        return self.model_df.rename(columns=MODEL_MAPPER)
+        self.model_df = self.model_df.rename(columns=MODEL_MAPPER)
+        return self.model_df
+
+    def get_final_df(self, df=None):
+        '''
+        Returns final dataframe to be fed to datagener
+        '''
+        if df is None:
+            df = self.encoded_df
+        self.final_df = self.remove_missing(df)
+        self.final_df = self.final_df.sort_values(by=['Patient ID', 'Right Eye'])
+        return self.final_df
 
     def remove_missing(self, df=None):
         '''
@@ -74,8 +85,7 @@ class DataFramer():
         if df is None:
             df = self.model_df
         true_images = os.listdir(self.impath)
-        df = df[df['Image'].isin(true_images)]
-        return df
+        return df[df['Image'].isin(true_images)]
 
     def get_key_list(self, series, key_list=None):
         '''
@@ -104,19 +114,35 @@ class DataFramer():
         right = data[['Right-Fundus']].values.squeeze()
         return left, right
 
+    def encode_paths(self, df=None, keyword_list=None):
+        '''
+        Returns a dataframe with disease keyphrases from Diagnostic Keywords One Hot Encoded.
+        By default we use all the key words in Diagnostic Keywords
+        '''
+        if df is None:
+            df = self.model_df
+        if keyword_list is None:
+            keyword_list = self.get_key_list(df['Diagnostic Keywords'])
+        # Can also pass a list of specific key words
+        # OHE output is a binary 0 and 1 as strings for the datagen
+        for diagnostic in keyword_list:
+            df[f'{diagnostic}'] = df['Diagnostic Keywords'].map(lambda x:'1' if x == diagnostic else '0')
+        self.encoded_df = df
+        return self.encoded_df
+
+    def make_final_df(self):
+        '''
+        Calls the above methods to create the prepared dataframe
+        '''
+        self.read_data()
+        self.get_human_df()
+        self.get_model_df()
+        self.encode_paths()
+        self.get_final_df()
+        return self.final_df
+
     def test(self):
         '''
         Test function to ensure that the class has reloaded when running in Jupyter
         '''
         print(TARGET_LIST[0])
-
-    def encode_paths(self, keyword_list=None):
-        # return a dataframe with disease keywords from Diagnostic Keywords One Hot Encoded
-        # by default we use all the key words in Diagnostic Keywords
-        if keyword_list == None:
-            keyword_list = self.get_key_list(self.model_df['Diagnostic Keywords'])
-        # can also pass a list of specific key words
-        # OHE output is a binary 0 and 1 as strings for the datagen
-        for diagnostic in keyword_list:
-            self.model_df[f'{diagnostic}'] = self.model_df['Diagnostic Keywords'].map(lambda x:'1' if x == diagnostic else '0')
-        return self.model_df

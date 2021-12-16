@@ -102,3 +102,16 @@ class DataFramer():
         Test function to ensure that the class has reloaded when running in Jupyter
         '''
         print(TARGET_LIST[0])
+
+
+
+    def custom_OHE(self,keyword_list=None):
+        # return a dataframe with disease keywords from Diagnostic Keywords One Hot Encoded
+        # by default we use all the key words in Diagnostic Keywords
+        if keyword_list == None:
+            keyword_list = self.get_key_list(self.model_df['Diagnostic Keywords'])
+        # can also pass a list of specific key words
+        # OHE output is a binary 0 and 1 as strings for the datagen
+        for diagnostic in keyword_list:
+            self.model_df[f'{diagnostic}'] = self.model_df['Diagnostic Keywords'].map(lambda x:'1' if x == diagnostic else '0')
+        return self.model_df

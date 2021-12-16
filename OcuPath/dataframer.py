@@ -39,40 +39,43 @@ class DataFramer():
         self.data = pd.read_csv(os.path.join(self.datapath, file), index_col='ID')
         return self.data
 
-    def get_human_df(self):
+    def get_human_df(self, data=None):
         '''
         Returns human readable dataframe of each eye, ready to be made 'model ready'
         '''
-        if any(self.data):
-            right_data = self.data[RIGHT_INFO].rename(columns=RIGHT_MAPPER)
-            right_data[['Eye']] = 'Right'
+        if data is None:
+            data = self.data
 
-            left_data = self.data[LEFT_INFO].rename(columns=LEFT_MAPPER)
-            left_data[['Eye']] = 'Left'
+        right_data = self.data[RIGHT_INFO].rename(columns=RIGHT_MAPPER)
+        right_data[['Eye']] = 'Right'
 
-            self.human_df = pd.concat((right_data, left_data)).drop_duplicates().sort_index()
-            self.human_df.index.name = 'Patient ID'
-            return self.human_df
-        return None
+        left_data = self.data[LEFT_INFO].rename(columns=LEFT_MAPPER)
+        left_data[['Eye']] = 'Left'
 
-    def get_model_df(self):
+        self.human_df = pd.concat((right_data, left_data)).drop_duplicates().sort_index()
+        self.human_df.index.name = 'Patient ID'
+        return self.human_df
+
+    def get_model_df(self, df=None):
         '''
         Returns dataframe with string inputs binary encoded
         '''
-        if any(self.human_df):
-            self.model_df = self.human_df.copy()
-            self.model_df['Patient Sex'] = self.model_df['Patient Sex'].map(SEX_MAPPER)
-            self.model_df['Eye'] = self.model_df['Eye'].map(EYE_MAPPER)
-            return self.model_df.rename(columns=MODEL_MAPPER)
-        return None
+        if df is None:
+            df = self.human_df
+        self.model_df = df.copy()
+        self.model_df['Patient Sex'] = self.model_df['Patient Sex'].map(SEX_MAPPER)
+        self.model_df['Eye'] = self.model_df['Eye'].map(EYE_MAPPER)
+        return self.model_df.rename(columns=MODEL_MAPPER)
 
-    def remove_missing(self):
+    def remove_missing(self, df=None):
         '''
         Removes instances of missing images for model_df
         '''
+        if df is None:
+            df = self.model_df
         true_images = os.listdir(self.impath)
-        self.model_df = self.model_df[self.model_df['Image'].isin(true_images)]
-        return self.model_df
+        df = df[df['Image'].isin(true_images)]
+        return df
 
     def get_key_list(self, series, key_list=None):
         '''
@@ -90,16 +93,16 @@ class DataFramer():
         key_list.sort()
         return key_list
 
-    def extract_jpg_names(self):
+    def extract_jpg_names(self, data=None):
         '''
         Uses the self.data attribute to extract the filenames for the left and
         right eye images for each patient
         '''
-        if any(self.data):
-            left = self.data[['Left-Fundus']].values.squeeze()
-            right = self.data[['Right-Fundus']].values.squeeze()
-            return left, right
-        return None
+        if data is None:
+            data = self.data
+        left = data[['Left-Fundus']].values.squeeze()
+        right = data[['Right-Fundus']].values.squeeze()
+        return left, right
 
     def test(self):
         '''
@@ -107,9 +110,7 @@ class DataFramer():
         '''
         print(TARGET_LIST[0])
 
-
-
-    def custom_OHE(self,keyword_list=None):
+    def encode_paths(self, keyword_list=None):
         # return a dataframe with disease keywords from Diagnostic Keywords One Hot Encoded
         # by default we use all the key words in Diagnostic Keywords
         if keyword_list == None:

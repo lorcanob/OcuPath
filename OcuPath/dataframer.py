@@ -10,7 +10,11 @@ class DataFramer():
     Class to transform and prepare the raw csv file into a format that is more useful
     '''
     def __init__(self) -> None:
+        self.datapath = None
+        self.impath = None
         self.data = None
+        self.human_df = None
+        self.model_df = None
 
     def set_data_path(self, drive=False):
         '''
@@ -18,7 +22,7 @@ class DataFramer():
         or via Google Drive
         '''
         if drive:
-            self.datapath = os.path.join('content', 'drive', 'MyDrive', 'Colab Notebooks', 'Ocular pathology')
+            self.datapath = os.path.join('/content', 'drive', 'MyDrive', 'Colab Notebooks', 'Ocular pathology')
         else:
             self.datapath = os.path.join('..', 'raw_data')
         return self.datapath

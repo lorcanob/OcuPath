@@ -26,9 +26,9 @@ class CNN_Model():
         self.model.add(Dropout(0.1))
         self.model.add(Flatten())
 
-        self.model.add(Dense(512, activation='relu'))
-        self.model.add(Dropout(0.15))
         self.model.add(Dense(64, activation='relu'))
+        self.model.add(Dropout(0.15))
+        self.model.add(Dense(32, activation='relu'))
         self.model.add(Dropout(0.15))
         self.model.add(Dense(10, activation='relu'))
         self.model.add(Dropout(0.2))

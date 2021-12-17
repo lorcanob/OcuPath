@@ -4,9 +4,13 @@ from .dataframer import DataFramer
 
 
 class DataGener(DataFramer):
-    def __init__(self) -> None:
+    '''
+    Builds on DataFramer to create the Image Data Generators
+    '''
+    def __init__(self, target) -> None:
         super().__init__()
         self.data = self.make_final_df()
+        self.target = target
         self.im_data_gen = ImageDataGenerator(rescale=1. / 255.,
                                               validation_split=0.2,
                                               rotation_range=15,
@@ -21,22 +25,22 @@ class DataGener(DataFramer):
             dataframe=self.data,
             directory=pathlib.Path(self.impath),
             x_col="Image",
-            y_col=self.key_list,
+            y_col=self.target,
             subset="training",
             batch_size=16,
             seed=42,
             shuffle=True,
-            class_mode="multi_output",
+            class_mode="binary",
             target_size=(64, 64))
 
         self.valid_gen = self.im_data_gen.flow_from_dataframe(
             dataframe=self.data,
             directory=pathlib.Path(self.impath),
             x_col="Image",
-            y_col=self.key_list,
+            y_col=self.target,
             subset="validation",
             batch_size=32,
             seed=42,
             shuffle=True,
-            class_mode="multi_output",
+            class_mode="binary",
             target_size=(64, 64))

@@ -7,10 +7,16 @@ from tensorflow.keras import regularizers
 from tensorflow.keras import optimizers
 
 class CNN_Model():
+    '''
+    Builds the CNN Model
+    '''
     def __init__(self) -> None:
         pass
 
     def build_model(self):
+        '''
+        Build multi-layer model with dense head layers
+        '''
         self.model = Sequential()
         self.model.add(Conv2D(32, (7, 7), padding='same', input_shape=(64, 64, 3), activation='relu'))
         self.model.add(MaxPooling2D(pool_size=(2, 2)))

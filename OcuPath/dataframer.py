@@ -27,7 +27,10 @@ class DataFramer():
         return self.datapath
 
     def set_image_path(self, drive=False, dir='preprocessed_images'):
-        self.set_image_path(drive)
+        '''
+        Set image path by calling data path
+        '''
+        self.set_data_path(drive)
         self.impath = os.path.join(self.datapath, dir)
         return self.impath
 
@@ -99,9 +102,9 @@ class DataFramer():
             keywords = re.findall(r'([\w\-\s]+)', eye)
             for word in keywords:
                 key_list.append(word.strip())
-        key_list = list(set(key_list))
-        key_list.sort()
-        return key_list
+        self.key_list = list(set(key_list))
+        self.key_list.sort()
+        return self.key_list
 
     def extract_jpg_names(self, data=None):
         '''

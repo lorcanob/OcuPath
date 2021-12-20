@@ -3,6 +3,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Flatten, Dropout, BatchNormalization
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.metrics import Recall, Precision
 from tensorflow.keras import regularizers
 from tensorflow.keras import optimizers
 
@@ -36,5 +37,5 @@ class CNN_Model():
 
         self.model.compile(optimizers.RMSprop(learning_rate=0.001, decay=1e-6),
                     loss="binary_crossentropy",
-                    metrics=["accuracy"])
+                    metrics=["accuracy", Recall(), Precision()])
         return self.model

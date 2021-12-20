@@ -23,7 +23,7 @@ class DataFramer():
         if drive:
             self.datapath = os.path.join('/content', 'drive', 'MyDrive', 'Colab Notebooks', 'Ocular pathology')
         else:
-            self.datapath = os.path.join('..', 'raw_data')
+            self.datapath = 'raw_data'
         return self.datapath
 
     def set_image_path(self, drive=False, dir='preprocessed_images'):

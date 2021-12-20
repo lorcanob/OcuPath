@@ -7,9 +7,9 @@ class DataGener(DataFramer):
     '''
     Builds on DataFramer to create the Image Data Generators
     '''
-    def __init__(self, target) -> None:
+    def __init__(self, data, target) -> None:
         super().__init__()
-        self.data = self.make_final_df()
+        self.data = data
         self.target = target
         self.im_data_gen = ImageDataGenerator(rescale=1. / 255.,
                                               validation_split=0.2,
@@ -25,7 +25,7 @@ class DataGener(DataFramer):
             dataframe=self.data,
             directory=pathlib.Path(self.impath),
             x_col="Image",
-            y_col=self.target,
+            y_col=self.target[0],
             subset="training",
             batch_size=16,
             seed=42,
@@ -37,7 +37,7 @@ class DataGener(DataFramer):
             dataframe=self.data,
             directory=pathlib.Path(self.impath),
             x_col="Image",
-            y_col=self.target,
+            y_col=self.target[0],
             subset="validation",
             batch_size=32,
             seed=42,

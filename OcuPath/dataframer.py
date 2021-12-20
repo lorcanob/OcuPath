@@ -78,7 +78,7 @@ class DataFramer():
 
     def get_wide_df(self, df=None):
         '''
-        Returns wide dataframe to be fed collapser
+        Returns wide dataframe with all sub-pathologies to be fed collapser
         '''
         if df is None:
             df = self.encode_paths()
@@ -139,6 +139,10 @@ class DataFramer():
         return self.encoded_df
 
     def single_path_collapser(self, pathology, df=None):
+        '''
+        Returns a dataframe with an additional column for a given pathology that
+        is True if any of the sub-pathologies are labelled as '1'
+        '''
         if df is None:
             df = self.wide_df
         temp_df = df[COLLAPSER[pathology]].astype(int).astype(bool)
@@ -146,6 +150,9 @@ class DataFramer():
         return df
 
     def multi_path_collapser(self, df=None):
+        '''
+        Applies the single pathology collapser to all pathologies in our COLLAPSER dictionary
+        '''
         if df is None:
             df = self.wide_df
         for key in COLLAPSER.keys():
@@ -154,6 +161,10 @@ class DataFramer():
         return self.narrow_df
 
     def collapse_paths(self, df=None):
+        '''
+        Calls multi_path_collapser on the dataframe and returns the final dataframe
+        to be fed to the model
+        '''
         if df is None:
             df = self.multi_path_collapser()
         df[list(COLLAPSER.keys())] = df[COLLAPSER.keys()].replace({True: '1', False: '0'})
@@ -172,6 +183,10 @@ class DataFramer():
         return self.wide_df
 
     def make_final_df(self):
+        '''
+        Calls all relevant functions to turn the raw input dataframe into the final
+        dataframe to be sent to the model
+        '''
         self.make_wide_df()
         self.collapse_paths()
         return self.final_df

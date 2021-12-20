@@ -12,19 +12,28 @@ import numpy as np
 
 
 class Trainer():
+    '''
+    Trainer class to fit the model
+    '''
     def __init__(self, target):
         self.data = None
         self.target = target
         self.pipeline = None
-        self.train, self.val = self.make_datagenerator()
+        self.train, self.val = self.make_data_generator()
 
-    def make_datagenerator(self):
+    def make_data_generator(self):
+        '''
+        Calls DataGener and returns the training and validation generators
+        '''
         datagener = DataGener(target=self.target)
         self.train, self.val = datagener.train_gen, datagener.valid_gen
         return self.train, self.val
 
 
     def run(self):
+        '''
+        Fits our model
+        '''
         STEP_SIZE_TRAIN=self.train.n//self.train.batch_size
         STEP_SIZE_VALID=self.val.n//self.val.batch_size
         cnn_model = CNN_Model()

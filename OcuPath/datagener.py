@@ -46,7 +46,10 @@ class DataGener(DataFramer):
             target_size=(64, 64))
 
     def set_df(self, df=None):
+        '''
+        Sets the generator dataframe to be the fully processed df inherited from DataFramer
+        '''
         if df is None:
-            df = self.make_final_df()
+            df = self.final_df
         self.df = df
         return self.df

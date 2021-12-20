@@ -1,5 +1,6 @@
 import os
 import re
+import numpy as np
 import pandas as pd
 
 from .params import *
@@ -9,13 +10,11 @@ class DataFramer():
     Class to transform and prepare the raw csv file into a format that is more useful
     '''
     def __init__(self) -> None:
-        self.datapath = self.set_data_path()
         self.impath = self.set_image_path()
         self.data = self.read_data()
-        self.human_df = self.get_human_df()
-        self.model_df = self.get_model_df()
+        self.final_df = self.make_final_df()
 
-    def set_data_path(self, drive=False):
+    def set_data_path(self, drive=False, notebook=True):
         '''
         Sets data path dependent on whether the data is being accessed locally
         or via Google Drive
@@ -23,22 +22,28 @@ class DataFramer():
         if drive:
             self.datapath = os.path.join('/content', 'drive', 'MyDrive', 'Colab Notebooks', 'Ocular pathology')
         else:
-            self.datapath = 'raw_data'
+            if notebook:
+                self.datapath = os.path.join('..', 'raw_data')
+            else:
+                self.datapath = 'raw_data'
         return self.datapath
 
-    def set_image_path(self, drive=False, dir='preprocessed_images'):
+    def set_image_path(self,
+                       drive=False,
+                       notebook=True,
+                       dir='preprocessed_images'):
         '''
         Set image path by calling data path
         '''
-        self.set_data_path(drive)
+        self.set_data_path(drive, notebook)
         self.impath = os.path.join(self.datapath, dir)
         return self.impath
 
-    def read_data(self, drive=False, file='full_df.csv'):
+    def read_data(self, drive=False, notebook=True, file='full_df.csv'):
         '''
         Reads the csv file into a Pandas DataFrame and stores it as an attribute
         '''
-        self.set_data_path(drive)
+        self.set_data_path(drive, notebook)
         self.data = pd.read_csv(os.path.join(self.datapath, file), index_col='ID')
         return self.data
 
@@ -71,15 +76,15 @@ class DataFramer():
         self.model_df = self.model_df.rename(columns=MODEL_MAPPER)
         return self.model_df
 
-    def get_final_df(self, df=None):
+    def get_wide_df(self, df=None):
         '''
-        Returns final dataframe to be fed to datagener
+        Returns wide dataframe to be fed collapser
         '''
         if df is None:
-            df = self.encoded_df
-        self.final_df = self.remove_missing(df)
-        self.final_df = self.final_df.sort_values(by=['Patient ID', 'Right Eye'])
-        return self.final_df
+            df = self.encode_paths()
+        self.wide_df = self.remove_missing(df)
+        self.wide_df = self.wide_df.sort_values(by=['Patient ID', 'Right Eye'])
+        return self.wide_df
 
     def remove_missing(self, df=None):
         '''
@@ -133,7 +138,29 @@ class DataFramer():
         self.encoded_df = df
         return self.encoded_df
 
-    def make_final_df(self):
+    def single_path_collapser(self, pathology, df=None):
+        if df is None:
+            df = self.wide_df
+        temp_df = df[COLLAPSER[pathology]].astype(int).astype(bool)
+        df[pathology] = np.logical_or.reduce(temp_df, axis=1)
+        return df
+
+    def multi_path_collapser(self, df=None):
+        if df is None:
+            df = self.wide_df
+        for key in COLLAPSER.keys():
+            df = self.single_path_collapser(key, df)
+        self.narrow_df = df
+        return self.narrow_df
+
+    def collapse_paths(self, df=None):
+        if df is None:
+            df = self.multi_path_collapser()
+        df[list(COLLAPSER.keys())] = df[COLLAPSER.keys()].replace({True: '1', False: '0'})
+        self.final_df = df[FINAL_COLS]
+        return self.final_df
+
+    def make_wide_df(self):
         '''
         Calls the above methods to create the prepared dataframe
         '''
@@ -141,7 +168,12 @@ class DataFramer():
         self.get_human_df()
         self.get_model_df()
         self.encode_paths()
-        self.get_final_df()
+        self.get_wide_df()
+        return self.wide_df
+
+    def make_final_df(self):
+        self.make_wide_df()
+        self.collapse_paths()
         return self.final_df
 
     def test(self):

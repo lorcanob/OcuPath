@@ -54,7 +54,105 @@ EYE_MAPPER = {
     'Right': 1
 }
 
+normal = ['normal fundus']
+diabetes = ['diabetic retinopathy',
+            'mild nonproliferative retinopathy',
+            'moderate non proliferative retinopathy',
+            'proliferative diabetic retinopathy',
+            'severe nonproliferative retinopathy',
+            'severe proliferative diabetic retinopathy',
+           ]
+glaucoma = ['glaucoma',
+            'suspected glaucoma',
+           ]
+cataract = ['cataract',
+           ]
+age_macula = ['dry age-related macular degeneration',
+              'wet age-related macular degeneration',
+             ]
+hypertension = ['hypertensive retinopathy']
+myopia = ['myopia retinopathy',
+          'myopic maculopathy',
+          'pathological myopia',]
+other = ['atrophic change',
+         'atrophy',
+         'branch retinal artery occlusion',
+         'branch retinal vein occlusion',
+         'central retinal artery occlusion',
+         'central retinal vein occlusion',
+         'central serous chorioretinopathy',
+         'chorioretinal atrophy',
+         'chorioretinal atrophy with pigmentation proliferation',
+         'congenital choroidal coloboma',
+         'depigmentation of the retinal pigment epithelium',
+         'drusen',
+         'epiretinal membrane',
+         'epiretinal membrane over the macula',
+         'fundus laser photocoagulation spots',
+         'glial remnants anterior to the optic disc',
+         'idiopathic choroidal neovascularization',
+         'intraretinal microvascular abnormality',
+         'laser spot',
+         'macular coloboma',
+         'macular hole',
+         'macular epiretinal membrane',
+         'maculopathy',
+         'morning glory syndrome',
+         'myelinated nerve fibers',
+         'old branch retinal vein occlusion',
+         'old central retinal vein occlusion',
+         'old chorioretinopathy',
+         'optic disc edema',
+         'optic discitis',
+         'optic disk epiretinal membrane',
+         'oval yellow-white atrophy',
+         'peripapillary atrophy',
+         'pigment epithelium proliferation',
+         'pigmentation disorder',
+         'post retinal laser surgery',
+         'refractive media opacity',
+         'retina fold',
+         'retinal pigmentation',
+         'retinal vascular sheathing',
+         'retinitis pigmentosa',
+         'retinochoroidal coloboma',
+         'silicone oil eye',
+         'spotted membranous change',
+         'suspected abnormal color of  optic disc',
+         'suspected retinal vascular sheathing',
+         'tessellated fundus',
+         'vitreous degeneration',
+         'wedge white line change',
+        ]
+image_comment = ['abnormal pigment', # None of these correspond to any encoded flags
+                 'anterior segment image',
+                 'image offset',
+                 'low image quality',
+                 'no fundus image',
+                 'optic disk photographically invisible',
+                ]
+
 COLLAPSER = {
+    'Normal': normal,
+    'Diabetes': diabetes,
+    'Glaucoma': glaucoma,
+    'Cataract': cataract,
+    'Age-related Macula Degeneration': age_macula,
+    'Hypertension': hypertension,
+    'Myopia': myopia,
+    'Other': other
+}
+
+FINAL_COLS = [
+    'Patient Age',
+    'Patient Male',
+    'Right Eye',
+    'Image',
+    'Diagnostic Keywords',
+    *COLLAPSER.keys()
+]
+
+LEGACY_COLLAPSER = {
     'normal fundus': 'Normal',
     'diabetic retinopathy': 'Diabetes',
     'mild nonproliferative retinopathy': 'Diabetes',

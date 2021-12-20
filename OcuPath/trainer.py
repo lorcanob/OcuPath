@@ -1,5 +1,4 @@
 from OcuPath.params import *
-from OcuPath.dataframer import DataFramer
 from OcuPath.datagener import DataGener
 from OcuPath.cnn_model import CNN_Model
 from sklearn.pipeline import Pipeline
@@ -13,25 +12,16 @@ import numpy as np
 
 
 class Trainer():
-    def __init__(self,target):
+    def __init__(self, target):
         self.data = None
         self.target = target
         self.pipeline = None
-        self.train = None
-        self.val = None
-
-    def make_dataframe(self):
-        dataframer = DataFramer()
-        df = dataframer.read_data()
-        df = dataframer.get_human_df(data=df)
-        df = dataframer.get_model_df(df=df)
-        df = dataframer.encode_paths(df=df, keyword_list=self.target)
-        self.data = dataframer.get_final_df(df=df)
-
+        self.train, self.val = self.make_datagenerator()
 
     def make_datagenerator(self):
-        datagener = DataGener(data=self.data, target=self.target)
+        datagener = DataGener(target=self.target)
         self.train, self.val = datagener.train_gen, datagener.valid_gen
+        return self.train, self.val
 
 
     def run(self):
@@ -48,6 +38,4 @@ class Trainer():
 
 if __name__ == "__main__":
     trainer = Trainer(['cataract'])
-    trainer.make_dataframe()
-    trainer.make_datagenerator()
     trainer.run()

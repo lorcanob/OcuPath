@@ -1,5 +1,4 @@
 from OcuPath.params import *
-from OcuPath.dataframer import DataFramer
 from OcuPath.datagener import DataGener
 from OcuPath.cnn_model import CNN_Model
 from sklearn.pipeline import Pipeline
@@ -13,28 +12,28 @@ import numpy as np
 
 
 class Trainer():
-    def __init__(self,target):
+    '''
+    Trainer class to fit the model
+    '''
+    def __init__(self, target):
         self.data = None
         self.target = target
         self.pipeline = None
-        self.train = None
-        self.val = None
+        self.train, self.val = self.make_data_generator()
 
-    def make_dataframe(self):
-        dataframer = DataFramer()
-        df = dataframer.read_data()
-        df = dataframer.get_human_df(data=df)
-        df = dataframer.get_model_df(df=df)
-        df = dataframer.encode_paths(df=df, keyword_list=self.target)
-        self.data = dataframer.get_final_df(df=df)
-
-
-    def make_datagenerator(self):
-        datagener = DataGener(data=self.data, target=self.target)
+    def make_data_generator(self):
+        '''
+        Calls DataGener and returns the training and validation generators
+        '''
+        datagener = DataGener(target=self.target)
         self.train, self.val = datagener.train_gen, datagener.valid_gen
+        return self.train, self.val
 
 
     def run(self):
+        '''
+        Fits our model
+        '''
         STEP_SIZE_TRAIN=self.train.n//self.train.batch_size
         STEP_SIZE_VALID=self.val.n//self.val.batch_size
         cnn_model = CNN_Model()
@@ -48,6 +47,4 @@ class Trainer():
 
 if __name__ == "__main__":
     trainer = Trainer(['cataract'])
-    trainer.make_dataframe()
-    trainer.make_datagenerator()
     trainer.run()

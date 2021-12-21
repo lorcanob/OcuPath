@@ -1,7 +1,7 @@
 import pathlib
 from keras_preprocessing.image import ImageDataGenerator
 
-from OcuPath.params import INPUT_LEN
+from .params import *
 from .dataframer import DataFramer
 
 

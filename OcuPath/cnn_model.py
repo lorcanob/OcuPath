@@ -33,7 +33,7 @@ class CNN_Model():
         self.model.add(Dropout(0.15))
         self.model.add(Dense(10, activation='relu'))
         self.model.add(Dropout(0.2))
-        self.model.add(Dense(1, activation='sigmoid'))
+        self.model.add(Dense(8, activation='sigmoid'))
 
         self.model.compile(optimizers.RMSprop(learning_rate=0.001, decay=1e-6),
                     loss="binary_crossentropy",

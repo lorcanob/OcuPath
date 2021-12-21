@@ -30,7 +30,7 @@ class DataGener(DataFramer):
             batch_size=16,
             seed=42,
             shuffle=True,
-            class_mode="binary",
+            class_mode="raw",
             target_size=(64, 64))
 
         self.valid_gen = self.im_data_gen.flow_from_dataframe(
@@ -42,7 +42,7 @@ class DataGener(DataFramer):
             batch_size=32,
             seed=42,
             shuffle=True,
-            class_mode="binary",
+            class_mode="raw",
             target_size=(64, 64))
 
     def set_df(self, df=None):

@@ -167,7 +167,7 @@ class DataFramer():
         '''
         if df is None:
             df = self.multi_path_collapser()
-        df[list(COLLAPSER.keys())] = df[COLLAPSER.keys()].replace({True: '1', False: '0'})
+        df[list(COLLAPSER.keys())] = df[COLLAPSER.keys()].replace({True: 1, False: 0})
         self.final_df = df[FINAL_COLS]
         return self.final_df
 

@@ -15,9 +15,9 @@ class Trainer():
     '''
     Trainer class to fit the model
     '''
-    def __init__(self, target):
+    def __init__(self, target=None):
         self.data = None
-        self.target = target
+        self.target = self.set_target(target)
         self.pipeline = None
         self.train, self.val = self.make_data_generator()
 
@@ -43,6 +43,12 @@ class Trainer():
                             validation_data=self.val,
                             validation_steps=STEP_SIZE_VALID,
                             epochs=10)
+
+    def set_target(self, target=None):
+        if target is None:
+            self.target = COLLAPSER.keys()
+        return self.target
+
 
 
 if __name__ == "__main__":

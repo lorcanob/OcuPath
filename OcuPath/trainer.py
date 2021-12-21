@@ -9,7 +9,7 @@ from sklearn.metrics import recall_score, precision_score, accuracy_score
 import pandas as pd
 import numpy as np
 
-
+from .params import *
 
 
 class Trainer():

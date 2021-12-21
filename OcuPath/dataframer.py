@@ -9,9 +9,9 @@ class DataFramer():
     '''
     Class to transform and prepare the raw csv file into a format that is more useful
     '''
-    def __init__(self) -> None:
-        self.impath = self.set_image_path()
-        self.data = self.read_data()
+    def __init__(self, drive=False, notebook=True) -> None:
+        self.impath = self.set_image_path(drive, notebook)
+        self.data = self.read_data(drive, notebook)
         self.final_df = self.make_final_df()
 
     def set_data_path(self, drive=False, notebook=True):
@@ -171,23 +171,23 @@ class DataFramer():
         self.final_df = df[FINAL_COLS]
         return self.final_df
 
-    def make_wide_df(self):
+    def make_wide_df(self, drive=False, notebook=True):
         '''
         Calls the above methods to create the prepared dataframe
         '''
-        self.read_data()
+        self.read_data(drive, notebook)
         self.get_human_df()
         self.get_model_df()
         self.encode_paths()
         self.get_wide_df()
         return self.wide_df
 
-    def make_final_df(self):
+    def make_final_df(self, drive=False, notebook=True):
         '''
         Calls all relevant functions to turn the raw input dataframe into the final
         dataframe to be sent to the model
         '''
-        self.make_wide_df()
+        self.make_wide_df(drive, notebook)
         self.collapse_paths()
         return self.final_df
 

@@ -1,5 +1,7 @@
 import pathlib
 from keras_preprocessing.image import ImageDataGenerator
+
+from OcuPath.params import INPUT_LEN
 from .dataframer import DataFramer
 
 
@@ -7,8 +9,8 @@ class DataGener(DataFramer):
     '''
     Builds on DataFramer to create the Image Data Generators
     '''
-    def __init__(self, target, df=None) -> None:
-        super().__init__()
+    def __init__(self, target, drive=False, notebook=True, df=None, ) -> None:
+        super().__init__(drive, notebook)
         self.target = target
         self.df = self.set_df(df)
         self.im_data_gen = ImageDataGenerator(rescale=1. / 255.,
@@ -31,7 +33,7 @@ class DataGener(DataFramer):
             seed=42,
             shuffle=True,
             class_mode="raw",
-            target_size=(64, 64))
+            target_size=(INPUT_LEN, INPUT_LEN))
 
         self.valid_gen = self.im_data_gen.flow_from_dataframe(
             dataframe=self.df,
@@ -43,7 +45,7 @@ class DataGener(DataFramer):
             seed=42,
             shuffle=True,
             class_mode="raw",
-            target_size=(64, 64))
+            target_size=(INPUT_LEN, INPUT_LEN))
 
     def set_df(self, df=None):
         '''

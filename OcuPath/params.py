@@ -219,3 +219,9 @@ LEGACY_COLLAPSER = {
     'vitreous degeneration': 'Other',
     'wedge white line change': 'Other'
 }
+
+INPUT_LEN = 128
+
+INPUT_2D = (INPUT_LEN, INPUT_LEN)
+
+INPUT_3D = (INPUT_LEN, INPUT_LEN, 3)

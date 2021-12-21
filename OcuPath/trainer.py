@@ -1,6 +1,3 @@
-from OcuPath.params import *
-from OcuPath.datagener import DataGener
-from OcuPath.cnn_model import CNN_Model
 from sklearn.pipeline import Pipeline
 from tensorflow.keras.metrics import Recall, Precision
 from tensorflow.python.keras.metrics import accuracy
@@ -10,6 +7,8 @@ import pandas as pd
 import numpy as np
 
 from .params import *
+from .datagener import DataGener
+from .cnn_model import CNN_Model
 
 
 class Trainer():

@@ -12,7 +12,7 @@ class DataFramer():
     def __init__(self, drive=False, notebook=True) -> None:
         self.impath = self.set_image_path(drive, notebook)
         self.data = self.read_data(drive, notebook)
-        self.final_df = self.make_final_df()
+        self.final_df = self.make_final_df(drive, notebook)
 
     def set_data_path(self, drive=False, notebook=True):
         '''
@@ -146,7 +146,7 @@ class DataFramer():
         if df is None:
             df = self.wide_df
         temp_df = df[COLLAPSER[pathology]].astype(int).astype(bool)
-        df[pathology] = np.logical_or.reduce(temp_df, axis=1)
+        df[pathology] = np.logical_or.reduce(np.array(temp_df), axis=1)
         return df
 
     def multi_path_collapser(self, df=None):

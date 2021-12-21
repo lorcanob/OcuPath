@@ -7,7 +7,7 @@ from tensorflow.keras.metrics import Recall, Precision
 from tensorflow.keras import regularizers
 from tensorflow.keras import optimizers
 
-from OcuPath.params import INPUT_LEN
+from .params import *
 
 class CNN_Model():
     '''

@@ -9,9 +9,9 @@ class DataGener(DataFramer):
     '''
     Builds on DataFramer to create the Image Data Generators
     '''
-    def __init__(self, target, drive=False, notebook=True, df=None, ) -> None:
+    def __init__(self, target=None, drive=False, notebook=True, df=None, ) -> None:
         super().__init__(drive, notebook)
-        self.target = target
+        self.target = self.set_target(target)
         self.df = self.set_df(df)
         self.im_data_gen = ImageDataGenerator(rescale=1. / 255.,
                                               validation_split=0.2,
@@ -46,6 +46,11 @@ class DataGener(DataFramer):
             shuffle=True,
             class_mode="raw",
             target_size=(INPUT_LEN, INPUT_LEN))
+
+    def set_target(self, target=None):
+        if target is None:
+            self.target = COLLAPSER.keys()
+        return self.target
 
     def set_df(self, df=None):
         '''

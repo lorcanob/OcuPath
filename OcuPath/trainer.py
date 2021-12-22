@@ -58,7 +58,7 @@ class Trainer():
                             steps_per_epoch=STEP_SIZE_TRAIN,
                             validation_data=val,
                             validation_steps=STEP_SIZE_VALID,
-                            epochs=self.epochs,
+                            epochs=epochs,
                             callbacks=callbacks)
 
     def set_target(self, target=None):

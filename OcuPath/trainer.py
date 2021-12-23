@@ -62,6 +62,9 @@ class Trainer():
                             callbacks=callbacks)
 
     def set_target(self, target=None):
+        '''
+        Sets the target output, by default returns a list of the relevant column headers
+        '''
         if target is None:
             self.target = COLLAPSER.keys()
         return self.target

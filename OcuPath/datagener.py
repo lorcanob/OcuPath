@@ -48,6 +48,9 @@ class DataGener(DataFramer):
             target_size=(INPUT_LEN, INPUT_LEN))
 
     def set_target(self, target=None):
+        '''
+        Sets the target output, by default returns a list of the relevant column headers
+        '''
         if target is None:
             self.target = COLLAPSER.keys()
         return self.target

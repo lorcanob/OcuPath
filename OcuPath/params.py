@@ -54,7 +54,9 @@ EYE_MAPPER = {
     'Right': 1
 }
 
-normal = ['normal fundus']
+normal = ['normal fundus',
+          ]
+
 diabetes = ['diabetic retinopathy',
             'mild nonproliferative retinopathy',
             'moderate non proliferative retinopathy',
@@ -62,18 +64,26 @@ diabetes = ['diabetic retinopathy',
             'severe nonproliferative retinopathy',
             'severe proliferative diabetic retinopathy',
            ]
+
 glaucoma = ['glaucoma',
             'suspected glaucoma',
            ]
+
 cataract = ['cataract',
            ]
+
 age_macula = ['dry age-related macular degeneration',
               'wet age-related macular degeneration',
              ]
-hypertension = ['hypertensive retinopathy']
+
+hypertension = ['hypertensive retinopathy',
+                ]
+
 myopia = ['myopia retinopathy',
           'myopic maculopathy',
-          'pathological myopia',]
+          'pathological myopia'
+          ]
+
 other = ['atrophic change',
          'atrophy',
          'branch retinal artery occlusion',
@@ -124,6 +134,7 @@ other = ['atrophic change',
          'vitreous degeneration',
          'wedge white line change',
         ]
+
 image_comment = ['abnormal pigment', # None of these correspond to any encoded flags
                  'anterior segment image',
                  'image offset',
